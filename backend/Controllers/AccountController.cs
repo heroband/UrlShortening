@@ -1,7 +1,10 @@
-﻿using backend.Dtos;
+﻿using System.Security.Claims;
+using backend.Dtos;
 using backend.Interfaces;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +15,11 @@ namespace backend.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        public AccountController(IUserRepository userRepository)
+        private readonly ITokenService _tokenService;
+        public AccountController(IUserRepository userRepository, ITokenService tokenService)
         {
             _userRepository = userRepository;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
@@ -38,6 +43,44 @@ namespace backend.Controllers
                 return BadRequest(new { message = "User registration failed", errors = result.Errors.Select(e => e.Description) });
             }
             return Ok(new { message = "User registered successfully." });
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userRepository.GetUserByUsernameAsync(model.Username);
+            if(user == null)
+            {
+                return Unauthorized(new { message = "Invalid username!" });
+            }
+
+            var signInResult = await _userRepository.CheckPassword(user, model.Password);
+            if (!signInResult.Succeeded)
+            {
+                return Unauthorized(new { message = "Invalid password!" });
+            }
+
+            var token = _tokenService.CreateToken(user);
+            return Ok(new { message = "Login successfully.", token = token });
+        }
+
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userRepository.GetUserByClaimsPrincipalAsync(User);
+
+            if (user == null)
+            {
+                return Unauthorized(new { message = "Invalid token!" });
+            }
+
+            return Ok(new { message = "Token is valid!", userName = user.UserName, email = user.Email });
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using System.Security.Claims;
+using backend.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace backend.Interfaces
@@ -8,5 +9,8 @@ namespace backend.Interfaces
         Task<IdentityResult> AddUserAsync(User user, string password);
         Task<User?> GetUserByEmailAsync(string email);
         Task<bool> IsEmailTakenAsync(string email);
+        Task<User?> GetUserByUsernameAsync(string username);
+        Task<SignInResult> CheckPassword(User user, string password);
+        Task<User?> GetUserByClaimsPrincipalAsync(ClaimsPrincipal userPrincipal);
     }
 }
