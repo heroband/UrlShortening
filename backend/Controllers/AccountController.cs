@@ -42,7 +42,10 @@ namespace backend.Controllers
             {
                 return BadRequest(new { message = "User registration failed", errors = result.Errors.Select(e => e.Description) });
             }
-            return Ok(new { message = "User registered successfully." });
+
+            var roles = await _userRepository.GetUserRolesAsync(user);
+            var token = _tokenService.CreateToken(user, roles);
+            return Ok(new { message = "User registered successfully.", token });
         }
 
         [HttpPost("login")]
@@ -65,8 +68,10 @@ namespace backend.Controllers
                 return Unauthorized(new { message = "Invalid password!" });
             }
 
-            var token = _tokenService.CreateToken(user);
-            return Ok(new { message = "Login successfully.", token = token });
+            var roles = await _userRepository.GetUserRolesAsync(user);
+
+            var token = _tokenService.CreateToken(user, roles);
+            return Ok(new { message = "Login successfully.", token });
         }
 
         [Authorize]

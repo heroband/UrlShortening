@@ -31,7 +31,21 @@ namespace backend.Data.Repositories
 
         public async Task<Url?> GetByIdAsync(string id)
         {
-            return await _context.Urls.FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Urls.FindAsync(id);
+        }
+
+        public async Task<Url?> GetByShortUrlAsync(string shortUrl)
+        {
+            return await _context.Urls.FindAsync(shortUrl);
+        }
+        public async Task<Url?> GetByOriginalUrlAsync(string originalUrl)
+        {
+            return await _context.Urls.FirstOrDefaultAsync(u => u.OriginalUrl == originalUrl);
+        }
+
+        public async Task<bool> IsShortUrlExistsAsync(string shortUrl)
+        {
+            return await _context.Urls.AnyAsync(u => u.ShortUrl == shortUrl);
         }
     }
 }

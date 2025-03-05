@@ -51,5 +51,10 @@ namespace backend.Data.Repositories
         {
             return await _userManager.GetUserAsync(userPrincipal);
         }
+        public async Task<List<string>> GetUserRolesAsync(User user)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            return roles.ToList();
+        }
     }
 }

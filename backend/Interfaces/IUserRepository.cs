@@ -12,5 +12,6 @@ namespace backend.Interfaces
         Task<User?> GetUserByUsernameAsync(string username);
         Task<SignInResult> CheckPassword(User user, string password);
         Task<User?> GetUserByClaimsPrincipalAsync(ClaimsPrincipal userPrincipal);
+        Task<List<string>> GetUserRolesAsync(User user);
     }
 }
