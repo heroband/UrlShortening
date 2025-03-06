@@ -47,6 +47,7 @@ builder.Services.AddScoped<IUrlRepository, UrlRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUrlShorteningService, UrlShorteningService>();
+builder.Services.AddScoped<IAlgorithmRepository, AlgorithmRepository>();
 
 var app = builder.Build();
 

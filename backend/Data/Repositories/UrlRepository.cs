@@ -36,7 +36,7 @@ namespace backend.Data.Repositories
 
         public async Task<Url?> GetByShortUrlAsync(string shortUrl)
         {
-            return await _context.Urls.FindAsync(shortUrl);
+            return await _context.Urls.FirstOrDefaultAsync(u => u.ShortUrl == shortUrl);
         }
         public async Task<Url?> GetByOriginalUrlAsync(string originalUrl)
         {

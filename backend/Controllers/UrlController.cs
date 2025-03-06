@@ -1,4 +1,5 @@
-﻿using backend.Interfaces;
+﻿using backend.Dtos;
+using backend.Interfaces;
 using backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,9 +24,14 @@ namespace backend.Controllers
 
         [Authorize]
         [HttpPost("create")]
-        public async Task<IActionResult> CreateUrl(string originalUrl)
+        public async Task<IActionResult> CreateUrl(ShortUrlDto shortUrlDto)
         {
-            var existingUrl = await _urlRepository.GetByOriginalUrlAsync(originalUrl);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existingUrl = await _urlRepository.GetByOriginalUrlAsync(shortUrlDto.OriginalUrl);
             if (existingUrl != null)
             {
                 return Conflict(new { message = "This URL has already been shortened." });
@@ -42,7 +48,7 @@ namespace backend.Controllers
 
             var url = new Url
             {
-                OriginalUrl = originalUrl,
+                OriginalUrl = shortUrlDto.OriginalUrl,
                 ShortUrl = shortUrl,
                 CreatedBy = user.Id,
                 CreatedAt = DateTime.UtcNow
@@ -60,6 +66,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetUrlById(string id)
         {
             var url = await _urlRepository.GetByIdAsync(id);
@@ -100,7 +107,7 @@ namespace backend.Controllers
             {
                 return NotFound(new { message = "Url wasn't found" });
             }
-            return Ok(new { message =  $"Redirect to {shortUrl}" });
+            return Ok(new { message =  $"Redirect to {url.OriginalUrl}" });
             //return Redirect(url.OriginalUrl);
         }
     }
