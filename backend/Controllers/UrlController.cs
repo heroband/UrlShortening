@@ -23,7 +23,7 @@ namespace backend.Controllers
         }
 
         [Authorize]
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<IActionResult> CreateUrl(ShortUrlDto shortUrlDto)
         {
             if (!ModelState.IsValid)
@@ -58,7 +58,7 @@ namespace backend.Controllers
             return Ok(new { message = "Url was successfully shortened", url });
         }
 
-        [HttpGet("getAll")]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var urls = await _urlRepository.GetAllAsync();
@@ -107,8 +107,7 @@ namespace backend.Controllers
             {
                 return NotFound(new { message = "Url wasn't found" });
             }
-            return Ok(new { message =  $"Redirect to {url.OriginalUrl}" });
-            //return Redirect(url.OriginalUrl);
+            return Ok(new { message = $"{url.OriginalUrl}" });
         }
     }
 }

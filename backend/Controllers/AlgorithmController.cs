@@ -17,7 +17,7 @@ namespace backend.Controllers
             _algorithmRepository = algorithmRepository;
         }
 
-        [HttpGet("get")]
+        [HttpGet]
         public async Task<IActionResult> GetAlgorithmInfo()
         {
             var algohithmInfo = await _algorithmRepository.GetAlgorithmInfoAsync();
@@ -25,7 +25,7 @@ namespace backend.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<IActionResult> CreateAboutInfo(AlgorithmDto algorithmDto)
         {
             if (!ModelState.IsValid)
@@ -44,7 +44,7 @@ namespace backend.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPut("update")]
+        [HttpPut]
         public async Task<IActionResult> UpdateAlgorithmInfo(AlgorithmDto algorithmDto)
         {
             if (!ModelState.IsValid)
@@ -57,7 +57,7 @@ namespace backend.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("delete")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteAlgorithmInfo()
         {
             var exists = await _algorithmRepository.IsAlgorithmInfoExistsAsync();

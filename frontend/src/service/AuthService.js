@@ -1,5 +1,3 @@
-import { jwtDecode } from 'jwt-decode';
-
 import ApiService from './ApiService';
 
 class AuthService {

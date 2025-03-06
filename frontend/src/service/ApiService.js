@@ -20,7 +20,7 @@ class ApiService {
 
       if (!response.ok) {
         const errorMessage = responseData.errors
-          ? responseData.errors.join(', ')
+          ? Object.values(responseData.errors).flat().join(', ')
           : responseData.message || `Request error ${response.status}`;
         throw new Error(errorMessage);
       }

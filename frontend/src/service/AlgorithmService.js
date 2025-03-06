@@ -2,18 +2,26 @@ import ApiService from './ApiService';
 
 class AlgorithmService {
   static async create(data) {
-    return ApiService.request('Algorithm/create', 'POST', data);
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    return ApiService.request('Algorithm/', 'POST', data, headers);
   }
 
   static async get() {
-    return ApiService.request('Algorithm/get', 'GET');
+    return ApiService.request('Algorithm/', 'GET');
   }
 
   static async update(data) {
-    return ApiService.request(`Algorithm/update`, 'PUT', data);
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    return ApiService.request(`Algorithm/`, 'PUT', data, headers);
   }
 
   static async delete() {
-    return ApiService.request(`Algorithm/delete`, 'DELETE');
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    return ApiService.request(`Algorithm/`, 'DELETE', null, headers);
   }
 }
+
+export default AlgorithmService;
