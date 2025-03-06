@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 
+import { useNavigate } from 'react-router';
+
 import { Alert, Button, TextField, Typography } from '@mui/material';
 import { Box, Container } from '@mui/system';
 
+import { useAuth } from '../context/AuthContext';
 import AuthService from '../service/AuthService';
 
 const Register = () => {
-  const [form, setForm] = useState({
-    username: '',
-    email: '',
-    password: '',
-  });
-
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -24,6 +24,8 @@ const Register = () => {
 
     try {
       const response = await AuthService.register(form);
+      login(response.token);
+      navigate('/');
       console.log('Response:', response);
     } catch (error) {
       setError(error.message);
